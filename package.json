@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "commit": "cz",
-    "prepare": "husky"
+    "prepare": "husky install"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -28,6 +28,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "vite": "^8.0.0-beta.13"
   },
   "overrides": {
