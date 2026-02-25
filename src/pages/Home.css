@@ -1,0 +1,30 @@
+.home-main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.home-spline-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+.hide-watermark-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 95%;
+  transform: translateX(-50%);
+  background: #111;
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px 32px;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  font-size: 1.2rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
