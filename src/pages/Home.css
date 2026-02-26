@@ -1,30 +1,108 @@
-.home-main {
-  position: relative;
+/* ===== Wrapper ===== */
+.home-wrapper {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  position: relative;
+  background: #0a0a0f;
 }
 
-.home-spline-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
+/* ============================
+   SPLASH / INTRO SCREEN
+   ============================ */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0a0a0f;
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.splash-screen.splash-exit {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.splash-spline {
   width: 100vw;
   height: 100vh;
+}
+
+/* Mini loader (while Spline downloads) */
+.splash-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #0a0a0f;
+  z-index: 110;
+}
+
+.loader-ring {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(100, 108, 255, 0.15);
+  border-top-color: #646cff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-text {
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+  letter-spacing: 0.08em;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ============================
+   MAIN CONTENT (after splash)
+   ============================ */
+.main-content {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  animation: fadeInContent 1.2s ease forwards;
+}
+
+/* Spline 3D background layer */
+.main-spline-bg {
+  position: absolute;
+  inset: 0;
   z-index: 0;
 }
-.hide-watermark-btn {
-  position: absolute;
-  bottom: 10px;
-  left: 95%;
-  transform: translateX(-50%);
-  background: #111;
-  color: #fff;
-  border-radius: 12px;
-  padding: 12px 32px;
-  z-index: 2;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  font-size: 1.2rem;
-  cursor: pointer;
-  white-space: nowrap;
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
