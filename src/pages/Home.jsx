@@ -177,6 +177,15 @@ export default function Home() {
                   scene="https://draft.spline.design/UeCJiOmi0HvX2hma/scene.splinecode"
                   style={{ width: '100vw', height: '100vh' }}
                 />
+                  {/* Botón solo sobre el canvas 3D */}
+              <div
+                className="absolute bottom-6 right-6 z-50 flex items-center gap-2"
+                style={{ pointerEvents: 'auto' }}
+              >
+                <button className="bg-[#000000] text-white px-4 py-2 rounded-full shadow-lg w-48 mt-32">
+
+                </button>
+              </div>
               </div>
             </div>
           </div>
