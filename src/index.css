@@ -1,3 +1,12 @@
+/* Ocultar scrollbar nativa en todos los navegadores */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  width: 0 !important;
+  background: transparent !important;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,7 +17,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  
 }
 
 :root {
@@ -26,13 +35,23 @@ body,
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+body,
+#root {
+  height: 100%;
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  /* overflow: hidden; */
 }
 
-
+/* Ocultar scroll nativo en navegadores modernos */
+body::-webkit-scrollbar {
+  width: 0 !important;
+  background: transparent;
+}
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
 
 @layer base {
   :root {
