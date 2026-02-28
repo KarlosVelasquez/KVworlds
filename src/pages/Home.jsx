@@ -157,6 +157,15 @@ export default function Home() {
               onLoad={handleSplineLoad}
             />
           </div>
+          {/* Botón en la presentación, mismo estilo pero sin redes sociales */}
+          <div
+            className="absolute bottom-4 right-4 z-50 flex items-center gap-1 text-sm"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <button className="bg-[#161616] text-white w-56 h-12 px-4 py-2 rounded-full shadow-lg flex items-center justify-center">
+              {/* Aquí puedes poner texto o dejarlo vacío */}
+            </button>
+          </div>
           {!splineReady && (
             <div className="splash-loader">
               <div className="loader-ring" />
@@ -179,11 +188,22 @@ export default function Home() {
                 />
                   {/* Botón solo sobre el canvas 3D */}
               <div
-                className="absolute bottom-6 right-6 z-50 flex items-center gap-2"
+                className="absolute bottom-4 right-4 z-50 flex items-center gap-1 text-sm"
                 style={{ pointerEvents: 'auto' }}
               >
-                <button className="bg-[#000000] text-white px-4 py-2 rounded-full shadow-lg w-48 mt-32">
-
+                <button className="bg-slate-950 text-white w-56 h-12 px-4 py-2 rounded-full shadow-lg flex items-center justify-center">
+                  {/* Redes sociales dentro del botón */}
+                  <div className="flex gap-3">
+                    <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
+                      <Instagram className="w-5 h-5 text-white" />
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
+                      <Twitter className="w-5 h-5 text-white" />
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
+                      <Github className="w-5 h-5 text-white" />
+                    </a>
+                  </div>
                 </button>
               </div>
               </div>
@@ -226,19 +246,6 @@ export default function Home() {
             }}
           />
         </div>
-      </div>
-
-      {/* Redes sociales abajo derecha */}
-      <div className="fixed bottom-8 right-8 z-20 flex gap-4">
-        <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-3 shadow hover:bg-[#B19EEF] transition">
-          <Instagram className="w-6 h-6 text-white" />
-        </a>
-        <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-3 shadow hover:bg-[#B19EEF] transition">
-          <Twitter className="w-6 h-6 text-white" />
-        </a>
-        <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-3 shadow hover:bg-[#B19EEF] transition">
-          <Github className="w-6 h-6 text-white" />
-        </a>
       </div>
     </div>
   );
