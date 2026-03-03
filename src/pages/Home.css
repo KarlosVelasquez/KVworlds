@@ -114,3 +114,74 @@ canvas[data-ghost-cursor] {
     transform: translateY(0);
   }
 }
+
+.name-depth {
+  color: #fff;
+  text-shadow:
+    0 1px 0 #8f7ac7,
+    0 2px 0 #7f6ab7,
+    0 3px 0 #6e5aa6,
+    0 14px 24px rgba(177, 158, 239, 0.35);
+}
+
+.skill-moon {
+  position: absolute;
+  border-radius: 46% 54% 43% 57% / 55% 42% 58% 45%;
+  border: 1px solid rgba(122, 109, 168, 0.42);
+  background: radial-gradient(circle at 22% 24%, rgba(255, 255, 255, 0.08), rgba(54, 46, 78, 0.42) 44%, rgba(10, 10, 14, 0.92));
+  box-shadow:
+    inset -12px -12px 18px rgba(0, 0, 0, 0.58),
+    inset 6px 6px 12px rgba(255, 255, 255, 0.03),
+    0 0 8px rgba(78, 67, 112, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+  transition: transform 0.2s ease;
+}
+
+.skill-moon-core {
+  position: relative;
+  width: 88%;
+  height: 88%;
+  border-radius: 40% 60% 44% 56% / 54% 44% 56% 46%;
+  background: rgba(8, 8, 12, 0.18);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skill-icon {
+  position: relative;
+  z-index: 2;
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
+}
+
+.skill-fallback {
+  position: absolute;
+  z-index: 1;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #e9e3ff;
+}
+
+.skill-moon.meteor-a {
+  border-radius: 46% 54% 43% 57% / 55% 42% 58% 45%;
+  transform: rotate(-9deg);
+}
+
+.skill-moon.meteor-b {
+  border-radius: 58% 42% 52% 48% / 44% 57% 43% 56%;
+  transform: rotate(6deg);
+}
+
+.skill-moon.meteor-c {
+  border-radius: 41% 59% 47% 53% / 52% 39% 61% 48%;
+  transform: rotate(13deg);
+}
+
