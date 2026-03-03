@@ -1,8 +1,8 @@
 
-import GhostCursor from '@gaotisan/ghostcursor';
 import Spline from '@splinetool/react-spline';
 import { useState, useEffect, useRef } from 'react';
 import { Volume2, VolumeX, Menu, Instagram, Twitter, Github } from 'lucide-react';
+import GhostCursor from '@/components/GhostCursor';
 import './Home.css';
 
 // Utilidad para clamp
@@ -66,22 +66,6 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [splineReady]);
 
-  // --- GhostCursor ---
-  useEffect(() => {
-    const cursor = new GhostCursor({
-      trailLength: 15,
-      inertia: 0.5,
-      grainIntensity: 0.05,
-      bloomStrength: 0.5,
-      bloomRadius: 1,
-      brightness: 2,
-      color: '#fff',
-      edgeIntensity: 0,
-    });
-    cursor.show();
-    return () => cursor.destroy();
-  }, []);
-
   // --- Bloquear solo interacción de drag en canvas Spline, pero permitir scroll/wheel ---
   useEffect(() => {
     if (!showMain) return;
@@ -125,6 +109,18 @@ export default function Home() {
 
   return (
     <div className="relative bg-black w-full">
+      <GhostCursor
+        className="fixed inset-0 pointer-events-none z-[2147483647]"
+        trailLength={10}
+        inertia={0.65}
+        grainIntensity={0.02}
+        bloomStrength={0.05}
+        bloomRadius={0.7}
+        brightness={1.2}
+        color="#B19EEF"
+        edgeIntensity={0}
+      />
+
       {/* Logo arriba izquierda */}
       <div className="absolute top-6 left-8 z-20 text-white font-bold text-3xl font-handwriting select-none tracking-widest">
         DEKO WORLDS
