@@ -2,7 +2,7 @@
 canvas[data-ghost-cursor] {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 2147483647 !important; /* máximo valor seguro */
+  z-index: 8 !important;
   pointer-events: none !important;
   mix-blend-mode: normal !important;
 }

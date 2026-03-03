@@ -380,7 +380,7 @@ export default function Home() {
   return (
     <div className="relative bg-black w-full">
       <GhostCursor
-        className="fixed inset-0 pointer-events-none z-[2147483647]"
+        className="fixed inset-0 pointer-events-none z-[8]"
         trailLength={10}
         inertia={0.65}
         grainIntensity={0.02}
@@ -477,7 +477,7 @@ export default function Home() {
             </div>
           </div>
           <section ref={aboutSectionRef} className="relative w-full h-screen bg-neutral-950 border-t-4 border-[#B19EEF] overflow-hidden px-6 py-8 flex items-center">
-            <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0 z-[15] pointer-events-none">
               {floatingTech.map((tech, index) => (
                 <div
                   key={tech.label}
