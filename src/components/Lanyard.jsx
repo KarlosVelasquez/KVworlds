@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import {
@@ -137,15 +137,24 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardScale = 2.25 
   const { nodes, materials } = useGLTF(CARD_MODEL_URL);
   const texture = useTexture(LANYARD_TEXTURE_URL);
 
-  const [curve] = useState(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-      ]),
-  );
+  const lineTexture = useMemo(() => {
+    const nextTexture = texture.clone();
+    nextTexture.wrapS = THREE.RepeatWrapping;
+    nextTexture.wrapT = THREE.RepeatWrapping;
+    nextTexture.needsUpdate = true;
+    return nextTexture;
+  }, [texture]);
+
+  const curve = useMemo(() => {
+    const nextCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+    ]);
+    nextCurve.curveType = 'chordal';
+    return nextCurve;
+  }, []);
 
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
@@ -212,9 +221,6 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardScale = 2.25 
     }
   });
 
-  curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
   return (
     <>
       <group position={[0, 4, 0]}>
@@ -272,7 +278,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardScale = 2.25 
           depthTest={false}
           resolution={isMobile ? [1000, 2000] : [1000, 1000]}
           useMap
-          map={texture}
+          map={lineTexture}
           repeat={[-4, 1]}
           lineWidth={1}
         />

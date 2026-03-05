@@ -1,0 +1,21 @@
+.home-logo {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  z-index: 20;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.875rem;
+  user-select: none;
+  letter-spacing: 0.12em;
+}
+
+.home-topbar-actions {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

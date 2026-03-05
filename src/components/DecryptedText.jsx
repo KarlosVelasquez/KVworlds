@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'motion/react';
 
 export default function DecryptedText({
   text,
@@ -25,6 +24,13 @@ export default function DecryptedText({
   const hasCompletedRef = useRef(false);
   const onCompleteRef = useRef(onComplete);
   const containerRef = useRef(null);
+
+  const resetScrambleState = () => {
+    setDisplayText(text);
+    setRevealedIndices(new Set());
+    setIsScrambling(false);
+    hasCompletedRef.current = false;
+  };
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
@@ -170,11 +176,6 @@ export default function DecryptedText({
       } else {
         beginScramble();
       }
-    } else {
-      setDisplayText(text);
-      setRevealedIndices(new Set());
-      setIsScrambling(false);
-      hasCompletedRef.current = false;
     }
 
     return () => {
@@ -233,13 +234,19 @@ export default function DecryptedText({
   const hoverProps =
     animateOn === 'hover' || animateOn === 'both'
       ? {
-          onMouseEnter: () => setIsHovering(true),
-          onMouseLeave: () => setIsHovering(false),
+          onMouseEnter: () => {
+            resetScrambleState();
+            setIsHovering(true);
+          },
+          onMouseLeave: () => {
+            setIsHovering(false);
+            resetScrambleState();
+          },
         }
       : {};
 
   return (
-    <motion.span
+    <span
       ref={containerRef}
       className={`inline-block whitespace-pre-wrap ${parentClassName}`}
       {...hoverProps}
@@ -258,6 +265,6 @@ export default function DecryptedText({
           );
         })}
       </span>
-    </motion.span>
+    </span>
   );
 }
