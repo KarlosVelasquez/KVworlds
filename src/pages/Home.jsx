@@ -3,6 +3,9 @@ import Spline from '@splinetool/react-spline';
 import { useState, useEffect, useRef } from 'react';
 import { Volume2, VolumeX, Menu, Instagram, Twitter, Github } from 'lucide-react';
 import GhostCursor from '@/components/GhostCursor';
+import Lanyard from '@/components/Lanyard';
+import DecryptedText from '@/components/DecryptedText';
+import LightRays from '@/components/LightRays';
 import profileImage from '@/assets/prueba2-removebg-preview.png';
 import { gsap } from 'gsap';
 import './Home.css';
@@ -12,9 +15,21 @@ function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
 }
 
-const SPLASH_DURATION = 5000;
+const SPLASH_DURATION = 3000;
+const ASTEROID_SCALE = 0.60;
+const LANYARD_DROP_DELAY_MS = 550;
+const ABOUT_LINES = [
+  "I don't just write code.",
+  'I architect systems,',
+  'design experiences,',
+  'and build products',
+  'with intention.',
+];
 
 export default function Home() {
+  const firstName = 'KARLOS';
+  const lastName = 'CAJIBIOY VELASQUEZ';
+
   const floatingTech = [
     { label: 'HTML5', size: 82, variant: 'meteor-a', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
     { label: 'CSS3', size: 82, variant: 'meteor-b', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
@@ -77,11 +92,14 @@ export default function Home() {
   const [showMain, setShowMain] = useState(false);
   const [splashExit, setSplashExit] = useState(false);
   const [musicOn, setMusicOn] = useState(true);
+  const [showLanyardDrop, setShowLanyardDrop] = useState(false);
   const splineBgRef = useRef(null);
   const aboutSectionRef = useRef(null);
   const moonRefs = useRef([]);
   const profileMassRef = useRef(null);
+  const lanyardDropRef = useRef(null);
   const pointerRef = useRef({ x: -1000, y: -1000, active: false });
+  const lanyardDropDelayTimeoutRef = useRef(null);
 
   // --- Splash Spline ---
   function handleSplineLoad() {
@@ -96,6 +114,60 @@ export default function Home() {
     }, SPLASH_DURATION);
     return () => clearTimeout(timer);
   }, [splineReady]);
+
+  useEffect(() => {
+    if (!showMain) {
+      setShowLanyardDrop(false);
+      if (lanyardDropDelayTimeoutRef.current) {
+        clearTimeout(lanyardDropDelayTimeoutRef.current);
+        lanyardDropDelayTimeoutRef.current = null;
+      }
+    }
+  }, [showMain]);
+
+  useEffect(() => {
+    return () => {
+      if (lanyardDropDelayTimeoutRef.current) {
+        clearTimeout(lanyardDropDelayTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleAboutAnimationComplete = () => {
+    if (lanyardDropDelayTimeoutRef.current) {
+      clearTimeout(lanyardDropDelayTimeoutRef.current);
+    }
+
+    lanyardDropDelayTimeoutRef.current = setTimeout(() => {
+      setShowLanyardDrop(true);
+      lanyardDropDelayTimeoutRef.current = null;
+    }, LANYARD_DROP_DELAY_MS);
+  };
+
+  useEffect(() => {
+    const lanyardElement = lanyardDropRef.current;
+    if (!lanyardElement) {
+      return undefined;
+    }
+
+    gsap.killTweensOf(lanyardElement);
+
+    if (!showLanyardDrop) {
+      gsap.set(lanyardElement, { y: -280, autoAlpha: 0 });
+      return undefined;
+    }
+
+    const timeline = gsap.timeline();
+    timeline
+      .to(lanyardElement, { y: 28, autoAlpha: 1, duration: 0.72, ease: 'power2.in' })
+      .to(lanyardElement, { y: 0, duration: 0.52, ease: 'power2.out' })
+      .to(lanyardElement, { y: 8, duration: 0.18, ease: 'power1.inOut' })
+      .to(lanyardElement, { y: 0, duration: 0.2, ease: 'power1.out' });
+
+    return () => {
+      timeline.kill();
+    };
+  }, [showLanyardDrop]);
 
   // --- Bloquear solo interacción de drag en canvas Spline, pero permitir scroll/wheel ---
   useEffect(() => {
@@ -381,13 +453,13 @@ export default function Home() {
     <div className="relative bg-black w-full">
       <GhostCursor
         className="fixed inset-0 pointer-events-none z-[8]"
-        trailLength={10}
+        trailLength={6}
         inertia={0.65}
         grainIntensity={0.02}
-        bloomStrength={0.05}
-        bloomRadius={0.7}
-        brightness={1.2}
-        color="#B19EEF"
+        bloomStrength={0.02}
+        bloomRadius={0.4}
+        brightness={0.85}
+        color="#9CA3AF"
         edgeIntensity={0}
       />
 
@@ -476,7 +548,59 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <section ref={aboutSectionRef} className="relative w-full h-screen bg-neutral-950 border-t-4 border-[#B19EEF] overflow-hidden px-6 py-8 flex items-center">
+          <section ref={aboutSectionRef} className="relative w-full h-screen bg-neutral-950 overflow-hidden px-6 py-8 flex items-center">
+            <div className="absolute inset-0 z-[1] pointer-events-none">
+              <LightRays
+                raysOrigin="top-center"
+                raysColor="#b6b6b6"
+                raysSpeed={1}
+                lightSpread={1}
+                rayLength={5}
+                pulsating={false}
+                fadeDistance={3}
+                saturation={0.75}
+                followMouse
+                mouseInfluence={0.04}
+                noiseAmount={0}
+                distortion={0}
+              />
+            </div>
+
+            <div className="absolute left-0 top-0 bottom-0 z-[120] w-[250px] md:w-[430px] pointer-events-none overflow-visible">
+              <div className="h-full pt-4 md:pt-6 pb-4 md:pb-6 pl-3 md:pl-6 pr-6 md:pr-10 uppercase font-handwriting italic font-black text-[26px] md:text-[56px] leading-[1.02] flex flex-col justify-between">
+                {ABOUT_LINES.map((line, index) => (
+                  <DecryptedText
+                    key={line}
+                    text={line}
+                    speed={72}
+                    startDelay={index * 850}
+                    maxIterations={24 + index * 4}
+                    sequential
+                    revealDirection="start"
+                    animateOn="view"
+                    onComplete={index === ABOUT_LINES.length - 1 ? handleAboutAnimationComplete : undefined}
+                    parentClassName="block"
+                    className="bg-gradient-to-r from-white via-zinc-300 to-zinc-600 bg-clip-text text-transparent drop-shadow-[0_1px_3px_rgba(0,0,0,0.45)]"
+                    encryptedClassName="text-zinc-600/60"
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="absolute -top-8 right-0 z-40 w-[390px] md:w-[520px] pointer-events-none flex justify-end">
+              <div
+                ref={lanyardDropRef}
+                className="w-[320px] h-[380px] md:w-[420px] md:h-[520px]"
+                style={{
+                  opacity: showLanyardDrop ? 1 : 0,
+                  transform: showLanyardDrop ? 'translateY(0px)' : 'translateY(-280px)',
+                  pointerEvents: showLanyardDrop ? 'auto' : 'none',
+                }}
+              >
+                <Lanyard position={[0, 0, 28]} gravity={[0, -38, 0]} fov={18} transparent cardScale={3.9} />
+              </div>
+            </div>
+
             <div className="absolute inset-0 z-[15] pointer-events-none">
               {floatingTech.map((tech, index) => (
                 <div
@@ -486,8 +610,8 @@ export default function Home() {
                   }}
                   className={`skill-moon ${tech.variant}`}
                   style={{
-                    width: `${tech.size}px`,
-                    height: `${tech.size}px`,
+                    width: `${tech.size * ASTEROID_SCALE}px`,
+                    height: `${tech.size * ASTEROID_SCALE}px`,
                   }}
                 >
                   <div className="skill-moon-core">
@@ -510,12 +634,18 @@ export default function Home() {
               
 
             </div>
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 ml-[250px] z-30 pointer-events-none">
+              <div className="leading-none text-left">
+                <p className="text-white font-black italic uppercase tracking-wide text-3xl md:text-4xl">{firstName}</p>
+                <p className="text-white font-black italic uppercase tracking-wide text-2xl md:text-3xl">{lastName}</p>
+              </div>
+            </div>
                <div className="absolute inset-0 z-[15] flex items-end justify-center pointer-events-none pb-0">
                 <img
                   ref={profileMassRef}
                   src={profileImage}
                   alt="Foto de perfil"
-                  className="w-[42vw] max-w-[560px] min-w-[260px] h-auto object-contain opacity-95"
+                  className="w-[34vw] max-w-[460px] min-w-[220px] h-auto object-contain opacity-95"
                 />
               </div>
           </section>
@@ -527,7 +657,7 @@ export default function Home() {
         className="fixed right-2 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center select-none"
         style={{ pointerEvents: 'none', opacity: scrollbarVisible ? 1 : 0, transition: 'opacity 0.4s cubic-bezier(.4,0,.2,1)' }}
       >
-        <div className="h-24 w-1.5 bg-neutral-900 rounded-full border border-neutral-700 flex flex-col justify-between py-1 relative">
+        <div className="h-24 w-1.5  rounded-full border border-neutral-700 flex flex-col justify-between py-1 relative">
           <div
             className="w-1 bg-[#B19EEF] rounded-full mx-auto shadow absolute left-1/2 -translate-x-1/2"
             style={{
