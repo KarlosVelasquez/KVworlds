@@ -28,16 +28,13 @@ export default function HeroSection({ splineBgRef }) {
   }, []);
 
   return (
-    <div ref={localHeroRef} className="flex flex-col items-center justify-center w-full h-auto min-w-full p-0 m-0">
-      <div className="relative w-full min-h-screen bg-neutral-600/80 rounded-none shadow-2xl border-2 border-neutral-700 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-10 pointer-events-none border-2 border-neutral-800" />
-
-        <div className="w-full h-full overflow-hidden" ref={splineBgRef}>
+    <div ref={localHeroRef} className="relative w-full h-screen overflow-hidden p-0 m-0">
+      <div className="w-full h-full overflow-hidden" ref={splineBgRef}>
           {shouldLoadSpline ? (
             <Suspense fallback={<div className="w-full h-full bg-black/35" />}>
               <Spline
                 scene="https://draft.spline.design/UeCJiOmi0HvX2hma/scene.splinecode"
-                style={{ width: '100vw', height: '100vh' }}
+                style={{ width: '100%', height: '100%' }}
               />
             </Suspense>
           ) : (
@@ -47,19 +44,18 @@ export default function HeroSection({ splineBgRef }) {
           <div className="absolute bottom-4 right-4 z-50 flex items-center gap-1 text-sm" style={{ pointerEvents: 'auto' }}>
             <button className="bg-slate-950 text-white w-56 h-12 px-4 py-2 rounded-full shadow-lg flex items-center justify-center">
               <div className="flex gap-3">
-                <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
+                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
                   <Instagram className="w-5 h-5 text-white" />
                 </a>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
                   <Twitter className="w-5 h-5 text-white" />
                 </a>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="bg-neutral-900/80 rounded-full p-2 shadow hover:bg-[#B19EEF] transition">
                   <Github className="w-5 h-5 text-white" />
                 </a>
               </div>
             </button>
           </div>
-        </div>
       </div>
     </div>
   );

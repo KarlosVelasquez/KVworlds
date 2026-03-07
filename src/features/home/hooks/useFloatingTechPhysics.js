@@ -10,53 +10,64 @@ export function useFloatingTechPhysics(showMain, aboutSectionRef, moonRefs, prof
       return undefined;
     }
 
-    const section = aboutSectionRef.current;
-    const moons = moonRefs.current.filter(Boolean);
-    if (!section || moons.length === 0) {
-      return undefined;
-    }
+    let disposed = false;
+    let initFrameId = null;
+    let cleanupPhysics = () => {};
 
-    const getBounds = () => ({
-      width: section.clientWidth,
-      height: section.clientHeight,
-    });
+    const initializePhysics = () => {
+      if (disposed) {
+        return;
+      }
 
-    const states = moons.map((moon) => {
-      const size = moon.offsetWidth || 100;
-      const { width, height } = getBounds();
-      const x = Math.random() * Math.max(1, width - size);
-      const y = Math.random() * Math.max(1, height - size);
-      const vx = (Math.random() * 0.65 + 0.45) * (Math.random() > 0.5 ? 1 : -1);
-      const vy = (Math.random() * 0.65 + 0.45) * (Math.random() > 0.5 ? 1 : -1);
+      const section = aboutSectionRef.current;
+      const moons = moonRefs.current.filter(Boolean);
+      if (!section || moons.length === 0) {
+        // About section is lazy-loaded; retry until refs are mounted.
+        initFrameId = window.requestAnimationFrame(initializePhysics);
+        return;
+      }
 
-      gsap.set(moon, { x, y });
-      return { moon, size, x, y, vx, vy };
-    });
+      const getBounds = () => ({
+        width: section.clientWidth,
+        height: section.clientHeight,
+      });
 
-    const handlePointerMove = (event) => {
-      const rect = section.getBoundingClientRect();
-      pointerRef.current = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-        active: true,
+      const states = moons.map((moon) => {
+        const size = moon.offsetWidth || 100;
+        const { width, height } = getBounds();
+        const x = Math.random() * Math.max(1, width - size);
+        const y = Math.random() * Math.max(1, height - size);
+        const vx = (Math.random() * 0.65 + 0.45) * (Math.random() > 0.5 ? 1 : -1);
+        const vy = (Math.random() * 0.65 + 0.45) * (Math.random() > 0.5 ? 1 : -1);
+
+        gsap.set(moon, { x, y });
+        return { moon, size, x, y, vx, vy };
+      });
+
+      const handlePointerMove = (event) => {
+        const rect = section.getBoundingClientRect();
+        pointerRef.current = {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+          active: true,
+        };
       };
-    };
 
-    const handlePointerLeave = () => {
-      pointerRef.current.active = false;
-      pointerRef.current.x = -1000;
-      pointerRef.current.y = -1000;
-    };
+      const handlePointerLeave = () => {
+        pointerRef.current.active = false;
+        pointerRef.current.x = -1000;
+        pointerRef.current.y = -1000;
+      };
 
-    section.addEventListener('pointermove', handlePointerMove);
-    section.addEventListener('pointerleave', handlePointerLeave);
+      section.addEventListener('pointermove', handlePointerMove);
+      section.addEventListener('pointerleave', handlePointerLeave);
 
-    const tick = () => {
-      const { width, height } = getBounds();
-      const pointer = pointerRef.current;
-      const sectionRect = section.getBoundingClientRect();
-      const profileRect = profileMassRef.current?.getBoundingClientRect();
-      const spacing = 4;
+      const tick = () => {
+        const { width, height } = getBounds();
+        const pointer = pointerRef.current;
+        const sectionRect = section.getBoundingClientRect();
+        const profileRect = profileMassRef.current?.getBoundingClientRect();
+        const spacing = 4;
 
       const profileObstacle = profileRect
         ? {
@@ -219,35 +230,46 @@ export function useFloatingTechPhysics(showMain, aboutSectionRef, moonRefs, prof
         }
       }
 
-      states.forEach((state) => {
-        resolveProfileCollision(state);
-        state.x = clamp(state.x, 0, Math.max(0, width - state.size));
-        state.y = clamp(state.y, 0, Math.max(0, height - state.size));
-        resolveProfileCollision(state);
-        state.x = clamp(state.x, 0, Math.max(0, width - state.size));
-        state.y = clamp(state.y, 0, Math.max(0, height - state.size));
+        states.forEach((state) => {
+          resolveProfileCollision(state);
+          state.x = clamp(state.x, 0, Math.max(0, width - state.size));
+          state.y = clamp(state.y, 0, Math.max(0, height - state.size));
+          resolveProfileCollision(state);
+          state.x = clamp(state.x, 0, Math.max(0, width - state.size));
+          state.y = clamp(state.y, 0, Math.max(0, height - state.size));
 
-        gsap.set(state.moon, { x: state.x, y: state.y });
-      });
+          gsap.set(state.moon, { x: state.x, y: state.y });
+        });
+      };
+
+      const onResize = () => {
+        const { width, height } = getBounds();
+        states.forEach((state) => {
+          state.x = Math.max(0, Math.min(state.x, width - state.size));
+          state.y = Math.max(0, Math.min(state.y, height - state.size));
+          gsap.set(state.moon, { x: state.x, y: state.y });
+        });
+      };
+
+      gsap.ticker.add(tick);
+      window.addEventListener('resize', onResize);
+
+      cleanupPhysics = () => {
+        gsap.ticker.remove(tick);
+        window.removeEventListener('resize', onResize);
+        section.removeEventListener('pointermove', handlePointerMove);
+        section.removeEventListener('pointerleave', handlePointerLeave);
+      };
     };
 
-    const onResize = () => {
-      const { width, height } = getBounds();
-      states.forEach((state) => {
-        state.x = Math.max(0, Math.min(state.x, width - state.size));
-        state.y = Math.max(0, Math.min(state.y, height - state.size));
-        gsap.set(state.moon, { x: state.x, y: state.y });
-      });
-    };
-
-    gsap.ticker.add(tick);
-    window.addEventListener('resize', onResize);
+    initializePhysics();
 
     return () => {
-      gsap.ticker.remove(tick);
-      window.removeEventListener('resize', onResize);
-      section.removeEventListener('pointermove', handlePointerMove);
-      section.removeEventListener('pointerleave', handlePointerLeave);
+      disposed = true;
+      if (initFrameId !== null) {
+        window.cancelAnimationFrame(initFrameId);
+      }
+      cleanupPhysics();
     };
   }, [showMain, aboutSectionRef, moonRefs, profileMassRef]);
 }

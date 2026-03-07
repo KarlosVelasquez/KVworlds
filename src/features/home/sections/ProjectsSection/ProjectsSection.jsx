@@ -1,4 +1,5 @@
 import { PROJECTS } from '@/features/projects/data';
+import StickyProjectCards from '@/features/projects/components/StickyProjectCards';
 import './ProjectsSection.css';
 
 export default function ProjectsSection({ sectionRef }) {
@@ -11,33 +12,7 @@ export default function ProjectsSection({ sectionRef }) {
           Esta seccion queda justo debajo de About me para que luego le conectes una navegacion premium con GSAP.
         </p>
 
-        <div className="home-projects-grid" aria-label="Lista de proyectos">
-          {PROJECTS.map((project) => (
-            <article className="home-project-card" key={project.title}>
-              <div className="home-project-top">
-                <span className="home-project-status">{project.status}</span>
-                <h3>{project.title}</h3>
-              </div>
-
-              <p>{project.description}</p>
-
-              <ul className="home-project-stack" aria-label={`Tecnologias de ${project.title}`}>
-                {project.stack.map((tech) => (
-                  <li key={tech}>{tech}</li>
-                ))}
-              </ul>
-
-              <div className="home-project-actions">
-                <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                  Demo
-                </a>
-                <a href={project.repo} target="_blank" rel="noopener noreferrer">
-                  Codigo
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
+        <StickyProjectCards projects={PROJECTS} />
       </div>
     </section>
   );

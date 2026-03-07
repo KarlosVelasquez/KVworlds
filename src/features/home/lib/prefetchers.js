@@ -27,6 +27,7 @@ export function prefetchHomeSections() {
     import('@/features/home/sections/AboutSection/AboutSection'),
     import('@/features/home/sections/ProjectsSection/ProjectsSection'),
     import('@/features/home/sections/HeroSection/HeroSection'),
+    import('@/features/home/sections/ContactSection/ContactSection'),
   ]);
 }
 

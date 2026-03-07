@@ -1,0 +1,26 @@
+.contact-crowd-section {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+.contact-crowd-canvas-host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.contact-crowd-canvas-host canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 720px) {
+  .contact-crowd-section {
+    min-height: 100svh;
+  }
+}

@@ -1,17 +1,22 @@
 .skill-moon {
   position: absolute;
   border-radius: 46% 54% 43% 57% / 55% 42% 58% 45%;
-  border: 1px solid rgba(122, 109, 168, 0.42);
-  background: radial-gradient(circle at 22% 24%, rgba(255, 255, 255, 0.08), rgba(54, 46, 78, 0.42) 44%, rgba(10, 10, 14, 0.92));
+  border: 1px solid rgba(156, 163, 175, 0.28);
+  background: radial-gradient(circle at 22% 24%, rgba(255, 255, 255, 0.06), rgba(40, 44, 52, 0.42) 44%, rgba(10, 10, 14, 0.9));
   box-shadow:
-    inset -12px -12px 18px rgba(0, 0, 0, 0.58),
-    inset 6px 6px 12px rgba(255, 255, 255, 0.03),
-    0 0 8px rgba(78, 67, 112, 0.32);
+    inset -10px -10px 15px rgba(0, 0, 0, 0.52),
+    inset 6px 6px 10px rgba(255, 255, 255, 0.02),
+    0 0 6px rgba(94, 104, 120, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(2px);
   transition: transform 0.2s ease;
+}
+
+.about-scroll-content-layer {
+  transform: translate3d(0, var(--about-shift, 0px), 0);
+  will-change: transform;
 }
 
 .skill-moon-core {
@@ -41,7 +46,7 @@
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #e9e3ff;
+  color: #d3d9e7;
 }
 
 .skill-moon.meteor-a {
@@ -57,4 +62,30 @@
 .skill-moon.meteor-c {
   border-radius: 41% 59% 47% 53% / 52% 39% 61% 48%;
   transform: rotate(13deg);
+}
+
+.about-profile-image {
+  opacity: 0;
+  transform: translateY(36px) scale(0.96);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-profile-image.is-visible {
+  opacity: 0.88;
+  transform: translateY(0) scale(1);
+}
+
+.about-name-group {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-name-group.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }

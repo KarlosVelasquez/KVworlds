@@ -13,6 +13,7 @@ export default function DecryptedText({
   parentClassName = '',
   encryptedClassName = '',
   animateOn = 'hover',
+  shouldStart = false,
   onComplete,
   ...props
 }) {
@@ -128,6 +129,8 @@ export default function DecryptedText({
     };
 
     const beginScramble = () => {
+      setRevealedIndices(new Set());
+      setDisplayText(shuffleText(text, new Set()));
       setIsScrambling(true);
       interval = setInterval(() => {
         setRevealedIndices((prevRevealed) => {
@@ -230,6 +233,19 @@ export default function DecryptedText({
       }
     };
   }, [animateOn, hasAnimated]);
+
+  useEffect(() => {
+    if (!shouldStart || hasAnimated) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setIsHovering(true);
+      setHasAnimated(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [shouldStart, hasAnimated]);
 
   const hoverProps =
     animateOn === 'hover' || animateOn === 'both'

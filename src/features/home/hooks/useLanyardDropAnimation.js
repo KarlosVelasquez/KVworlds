@@ -4,9 +4,15 @@ import { gsap } from 'gsap';
 export function useLanyardDropAnimation(lanyardDropRef, delayMs = 550) {
   const [showLanyardDrop, setShowLanyardDrop] = useState(false);
   const delayTimeoutRef = useRef(null);
+  const instantMode = delayMs <= 0;
 
   const triggerDrop = () => {
     clearTimeout(delayTimeoutRef.current);
+
+    if (instantMode) {
+      setShowLanyardDrop(true);
+      return;
+    }
 
     delayTimeoutRef.current = setTimeout(() => {
       setShowLanyardDrop(true);
@@ -33,6 +39,11 @@ export function useLanyardDropAnimation(lanyardDropRef, delayMs = 550) {
       return undefined;
     }
 
+    if (instantMode) {
+      gsap.set(element, { y: 0, autoAlpha: 1 });
+      return undefined;
+    }
+
     const timeline = gsap.timeline();
     timeline
       .to(element, { y: 28, autoAlpha: 1, duration: 0.72, ease: 'power2.in' })
@@ -43,7 +54,7 @@ export function useLanyardDropAnimation(lanyardDropRef, delayMs = 550) {
     return () => {
       timeline.kill();
     };
-  }, [showLanyardDrop, lanyardDropRef]);
+  }, [showLanyardDrop, lanyardDropRef, instantMode]);
 
   return {
     showLanyardDrop,
