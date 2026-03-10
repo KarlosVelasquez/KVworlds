@@ -1,5 +1,5 @@
 import { Volume2, VolumeX, Menu } from 'lucide-react';
-import { prefetchHomeHeavyChunks, prefetchProjectsRoute } from '@/features/home/lib';
+import { prefetchProjectsRoute } from '@/features/home/lib';
 import './TopBar.css';
 
 export default function TopBar({ musicOn, onToggleMusic, onMenuClick }) {
@@ -21,7 +21,6 @@ export default function TopBar({ musicOn, onToggleMusic, onMenuClick }) {
           aria-label="Menu"
           onMouseEnter={() => {
             prefetchProjectsRoute();
-            prefetchHomeHeavyChunks();
           }}
           onFocus={() => {
             prefetchProjectsRoute();

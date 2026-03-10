@@ -34,12 +34,32 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules/@react-three') || id.includes('node_modules/@dimforge')) {
-              return 'vendor-react-three'
+            if (id.includes('node_modules/@splinetool/react-spline')) {
+              return 'vendor-spline-react'
             }
 
-            if (id.includes('node_modules/@splinetool') || id.includes('node_modules/three')) {
-              return 'vendor-spline-three'
+            if (id.includes('node_modules/@splinetool/runtime')) {
+              return 'vendor-spline-runtime'
+            }
+
+            if (id.includes('node_modules/@react-three/fiber')) {
+              return 'vendor-r3f'
+            }
+
+            if (id.includes('node_modules/@react-three/drei')) {
+              return 'vendor-r3f-drei'
+            }
+
+            if (id.includes('node_modules/@react-three/rapier') || id.includes('node_modules/@dimforge')) {
+              return 'vendor-r3f-rapier'
+            }
+
+            if (id.includes('node_modules/three')) {
+              return 'vendor-three-core'
+            }
+
+            if (id.includes('node_modules/meshline')) {
+              return 'vendor-three-meshline'
             }
 
             if (id.includes('node_modules/gsap')) {

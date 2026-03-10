@@ -19,3 +19,18 @@
   align-items: center;
   gap: 1rem;
 }
+
+@media (max-width: 720px) {
+  .home-logo {
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+  }
+
+  .home-topbar-actions {
+    top: 0.95rem;
+    right: 1rem;
+    gap: 0.55rem;
+  }
+}

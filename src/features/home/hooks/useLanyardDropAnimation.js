@@ -9,7 +9,7 @@ export function useLanyardDropAnimation(lanyardDropRef, delayMs = 550) {
   const triggerDrop = () => {
     clearTimeout(delayTimeoutRef.current);
 
-    if (instantMode) {
+    if (instantMode) {  
       setShowLanyardDrop(true);
       return;
     }
@@ -18,6 +18,12 @@ export function useLanyardDropAnimation(lanyardDropRef, delayMs = 550) {
       setShowLanyardDrop(true);
       delayTimeoutRef.current = null;
     }, delayMs);
+  };
+
+  const resetDrop = () => {
+    clearTimeout(delayTimeoutRef.current);
+    delayTimeoutRef.current = null;
+    setShowLanyardDrop(false);
   };
 
   useEffect(() => {
@@ -59,5 +65,6 @@ export function useLanyardDropAnimation(lanyardDropRef, delayMs = 550) {
   return {
     showLanyardDrop,
     triggerDrop,
+    resetDrop,
   };
 }

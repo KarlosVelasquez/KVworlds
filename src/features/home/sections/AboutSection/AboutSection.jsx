@@ -9,12 +9,10 @@ const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 export default function AboutSection({
   aboutSectionRef,
-  moonRefs,
-  floatingTech,
-  asteroidScale,
   lanyardDropRef,
   showLanyardDrop,
   onAboutAnimationComplete,
+  onAboutAnimationReset,
   profileMassRef,
   firstName,
   lastName,
@@ -33,17 +31,25 @@ export default function AboutSection({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsAboutInView(true);
-          observer.disconnect();
+        const inView = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+        setIsAboutInView(inView);
+
+        if (inView && !dropTriggered) {
+          setDropTriggered(true);
+          onAboutAnimationComplete?.();
+        }
+
+        if (!inView && dropTriggered) {
+          setDropTriggered(false);
+          onAboutAnimationReset?.();
         }
       },
-      { root: null, rootMargin: '180px 0px', threshold: 0.05 },
+      { root: null, rootMargin: '0px', threshold: [0, 0.2, 0.4] },
     );
 
     observer.observe(section);
     return () => observer.disconnect();
-  }, [aboutSectionRef]);
+  }, [aboutSectionRef, dropTriggered, onAboutAnimationComplete, onAboutAnimationReset]);
 
   useEffect(() => {
     const section = aboutTrackRef.current;
@@ -64,15 +70,12 @@ export default function AboutSection({
       setScrollProgress(progress);
 
       if (contentLayerRef.current) {
-        // Keep the composition around screen center while still adding subtle motion.
-        const centeredShift = Math.round((progress - 0.5) * 120);
+        // Keep motion subtle and clamp the final stage to avoid abrupt drift near section end.
+        const stabilizedProgress = Math.min(progress, 0.82);
+        const centeredShift = Math.round((stabilizedProgress - 0.45) * 70);
         contentLayerRef.current.style.setProperty('--about-shift', `${centeredShift}px`);
       }
 
-      if (progress >= 0.67 && !dropTriggered) {
-        setDropTriggered(true);
-        onAboutAnimationComplete?.();
-      }
     };
 
     const onScroll = () => {
@@ -92,21 +95,19 @@ export default function AboutSection({
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [aboutSectionRef, dropTriggered, onAboutAnimationComplete]);
+  }, [aboutSectionRef]);
 
-  const profileReveal = clamp01((scrollProgress - 0.12) / 0.22);
-  const nameReveal = clamp01((scrollProgress - 0.36) / 0.2);
-  const decorationsReveal = clamp01((scrollProgress - 0.57) / 0.2);
-  const shouldShowDecorations = decorationsReveal > 0.02;
-  const shouldShowLanyard = scrollProgress >= 0.67;
+  const profileReveal = clamp01((scrollProgress - 0.08) / 0.22);
+  const nameReveal = clamp01((scrollProgress - 0.28) / 0.2);
+  const shouldShowLanyard = isAboutInView;
 
   const getLineReveal = (index) => {
-    const start = 0.5 + index * 0.06;
-    return clamp01((scrollProgress - start) / 0.1);
+    const start = 0.38 + index * 0.055;
+    return clamp01((scrollProgress - start) / 0.11);
   };
 
   return (
-    <section ref={aboutTrackRef} className="relative w-full h-[620vh]">
+    <section ref={aboutTrackRef} className="relative w-full h-[500vh]">
       <div ref={aboutSectionRef} className="sticky top-0 w-full h-screen overflow-visible px-6 py-8 flex items-center">
         <div
           ref={contentLayerRef}
@@ -142,7 +143,7 @@ export default function AboutSection({
               ref={lanyardDropRef}
               className="w-[320px] h-[380px] md:w-[420px] md:h-[520px]"
               style={{
-                opacity: shouldShowLanyard && showLanyardDrop ? decorationsReveal : 0,
+                opacity: shouldShowLanyard && showLanyardDrop ? 1 : 0,
                 transform: shouldShowLanyard && showLanyardDrop ? 'translateY(0px)' : 'translateY(-280px)',
                 pointerEvents: shouldShowLanyard && showLanyardDrop ? 'auto' : 'none',
               }}
@@ -154,37 +155,6 @@ export default function AboutSection({
               ) : null}
             </div>
           </div>
-
-          {shouldShowDecorations && (
-            <div className="absolute inset-0 z-[15] pointer-events-none">
-              {floatingTech.map((tech, index) => (
-                <div
-                  key={tech.label}
-                  ref={(element) => {
-                    moonRefs.current[index] = element;
-                  }}
-                  className={`skill-moon ${tech.variant}`}
-                  style={{
-                    width: `${tech.size * asteroidScale}px`,
-                    height: `${tech.size * asteroidScale}px`,
-                  }}
-                >
-                  <div className="skill-moon-core">
-                    <span className="skill-fallback" aria-hidden="true">{tech.label.slice(0, 2).toUpperCase()}</span>
-                    <img
-                      src={tech.icon}
-                      alt={tech.label}
-                      className="skill-icon"
-                      loading="lazy"
-                      onError={(event) => {
-                        event.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
 
           <div
             className="absolute bottom-14 md:bottom-20 left-1/2 -translate-x-1/2 ml-[250px] z-30 pointer-events-none"

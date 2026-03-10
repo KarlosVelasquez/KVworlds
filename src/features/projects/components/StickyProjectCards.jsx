@@ -102,28 +102,27 @@ export default function StickyProjectCards({ projects = [] }) {
               loading="lazy"
             />
 
-            <div className="sticky-project-overlay">
-              <div className="sticky-project-head">
-                <span className="sticky-project-status">{project.status}</span>
-                <h3>{project.title}</h3>
-              </div>
+            <span className="sticky-project-status">{project.status}</span>
+            <h3 className="sticky-project-title">{project.title}</h3>
 
-              <p>{project.description}</p>
+            <div className="sticky-project-overlay">
+              <p className="sticky-project-description">{project.description}</p>
 
               <div className="sticky-project-actions">
-                {project.demo ? (
-                  <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                    Demo
+                {project.website || project.demo ? (
+                  <a href={project.website || project.demo} target="_blank" rel="noopener noreferrer">
+                    Visitar pagina web
                   </a>
                 ) : (
-                  <span className="is-disabled" aria-disabled="true">Demo</span>
+                  <span className="is-disabled" aria-disabled="true">Visitar pagina web</span>
                 )}
-                {project.repo ? (
-                  <a href={project.repo} target="_blank" rel="noopener noreferrer">
-                    Codigo
+
+                {project.github || project.repo ? (
+                  <a href={project.github || project.repo} target="_blank" rel="noopener noreferrer">
+                    Ver repositorio GitHub
                   </a>
                 ) : (
-                  <span className="is-disabled" aria-disabled="true">Codigo</span>
+                  <span className="is-disabled" aria-disabled="true">Ver repositorio GitHub</span>
                 )}
               </div>
             </div>

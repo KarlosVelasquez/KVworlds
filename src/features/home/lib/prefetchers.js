@@ -1,35 +1,4 @@
-let hasPrefetchedHomeHeavy = false;
-let hasPrefetchedHomeSections = false;
 let hasPrefetchedProjects = false;
-
-export function prefetchHomeHeavyChunks() {
-  if (hasPrefetchedHomeHeavy) {
-    return;
-  }
-
-  hasPrefetchedHomeHeavy = true;
-
-  Promise.allSettled([
-    import('@/components/Lanyard'),
-    import('@/components/LightRays'),
-    import('@splinetool/react-spline'),
-  ]);
-}
-
-export function prefetchHomeSections() {
-  if (hasPrefetchedHomeSections) {
-    return;
-  }
-
-  hasPrefetchedHomeSections = true;
-
-  Promise.allSettled([
-    import('@/features/home/sections/AboutSection/AboutSection'),
-    import('@/features/home/sections/ProjectsSection/ProjectsSection'),
-    import('@/features/home/sections/HeroSection/HeroSection'),
-    import('@/features/home/sections/ContactSection/ContactSection'),
-  ]);
-}
 
 export function prefetchProjectsRoute() {
   if (hasPrefetchedProjects) {

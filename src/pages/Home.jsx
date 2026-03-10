@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import GhostCursor from '@/components/GhostCursor';
 import { FLOATING_TECH } from '@/features/home/constants';
 import {
   useFloatingTechPhysics,
@@ -9,8 +8,6 @@ import {
   useSplineDragLock,
 } from '@/features/home/hooks';
 import {
-  prefetchHomeHeavyChunks,
-  prefetchHomeSections,
   prefetchProjectsRoute,
   scheduleIdlePrefetch,
 } from '@/features/home/lib';
@@ -36,7 +33,6 @@ export default function Home() {
   const [splashExit, setSplashExit] = useState(false);
   const [splineReady, setSplineReady] = useState(false);
   const [musicOn, setMusicOn] = useState(true);
-  const [projectsInView, setProjectsInView] = useState(false);
   const showMain = true;
 
 
@@ -52,7 +48,7 @@ export default function Home() {
 
   const { scrollThumbTop, scrollThumbHeight, scrollbarVisible } = useHomeScrollbar();
 
-  const { showLanyardDrop, triggerDrop } = useLanyardDropAnimation(lanyardDropRef, LANYARD_DROP_DELAY_MS);
+  const { showLanyardDrop, triggerDrop, resetDrop } = useLanyardDropAnimation(lanyardDropRef, LANYARD_DROP_DELAY_MS);
 
   const dismissSplash = () => {
     if (splashDismissedRef.current) {
@@ -67,7 +63,7 @@ export default function Home() {
   };
 
   useSplineDragLock(showMain, splineBgRef);
-  useFloatingTechPhysics(showMain, aboutSectionRef, moonRefs, profileMassRef);
+  useFloatingTechPhysics(showMain, moonRefs, profileMassRef);
   useHomeScrollTriggerPlaceholder({
     heroRef: heroSectionRef,
     aboutRef: aboutSectionRef,
@@ -76,9 +72,8 @@ export default function Home() {
 
   useEffect(() => {
     const cleanupIdle = scheduleIdlePrefetch(() => {
-      prefetchHomeSections();
       prefetchProjectsRoute();
-    }, 900);
+    }, 1200);
 
     return cleanupIdle;
   }, []);
@@ -123,10 +118,6 @@ export default function Home() {
             return;
           }
 
-          if (entry.target === aboutEl) {
-            prefetchHomeHeavyChunks();
-          }
-
           if (entry.target === projectsEl) {
             prefetchProjectsRoute();
           }
@@ -151,23 +142,6 @@ export default function Home() {
       observer.observe(contactEl);
     }
 
-    return () => observer.disconnect();
-  }, [showMain]);
-
-  useEffect(() => {
-    const section = projectsSectionRef.current;
-    if (!section || !showMain) {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setProjectsInView(entry?.isIntersecting ?? false);
-      },
-      { root: null, threshold: 0.3 },
-    );
-
-    observer.observe(section);
     return () => observer.disconnect();
   }, [showMain]);
 
@@ -205,19 +179,34 @@ export default function Home() {
 
   return (
     <div className="home-shell">
-      {(!showMain || !projectsInView) && (
-        <GhostCursor
-          className="fixed inset-0 pointer-events-none z-[8]"
-          trailLength={6}
-          inertia={0.65}
-          grainIntensity={0.02}
-          bloomStrength={0.02}
-          bloomRadius={0.4}
-          brightness={0.85}
-          color="#9CA3AF"
-          edgeIntensity={0}
-        />
-      )}
+      <div className="home-floating-background" aria-hidden="true">
+        {FLOATING_TECH.map((tech, index) => (
+          <div
+            key={tech.label}
+            ref={(element) => {
+              moonRefs.current[index] = element;
+            }}
+            className={`skill-moon ${tech.variant}`}
+            style={{
+              width: `${tech.size * ASTEROID_SCALE}px`,
+              height: `${tech.size * ASTEROID_SCALE}px`,
+            }}
+          >
+            <div className="skill-moon-core">
+              <span className="skill-fallback" aria-hidden="true">{tech.label.slice(0, 2).toUpperCase()}</span>
+              <img
+                src={tech.icon}
+                alt={tech.label}
+                className="skill-icon"
+                loading="lazy"
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
 
       <TopBar
         musicOn={musicOn}
@@ -241,12 +230,10 @@ export default function Home() {
             <div className="home-window home-window--about" style={{ '--reveal-delay': '110ms' }}>
               <AboutSection
                 aboutSectionRef={aboutSectionRef}
-                moonRefs={moonRefs}
-                floatingTech={FLOATING_TECH}
-                asteroidScale={ASTEROID_SCALE}
                 lanyardDropRef={lanyardDropRef}
                 showLanyardDrop={showLanyardDrop}
                 onAboutAnimationComplete={triggerDrop}
+                onAboutAnimationReset={resetDrop}
                 profileMassRef={profileMassRef}
                 firstName={firstName}
                 lastName={lastName}

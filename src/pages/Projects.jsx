@@ -35,12 +35,21 @@ export default function Projects() {
             </ul>
 
             <div className="project-actions">
-              <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                Demo
-              </a>
-              <a href={project.repo} target="_blank" rel="noopener noreferrer">
-                Codigo
-              </a>
+              {project.website || project.demo ? (
+                <a href={project.website || project.demo} target="_blank" rel="noopener noreferrer">
+                  Visitar pagina web
+                </a>
+              ) : (
+                <span className="is-disabled" aria-disabled="true">Visitar pagina web</span>
+              )}
+
+              {project.github || project.repo ? (
+                <a href={project.github || project.repo} target="_blank" rel="noopener noreferrer">
+                  Ver repositorio GitHub
+                </a>
+              ) : (
+                <span className="is-disabled" aria-disabled="true">Ver repositorio GitHub</span>
+              )}
             </div>
           </article>
         ))}
