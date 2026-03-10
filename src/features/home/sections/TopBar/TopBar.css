@@ -1,0 +1,36 @@
+.home-logo {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  z-index: 20;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.875rem;
+  user-select: none;
+  letter-spacing: 0.12em;
+}
+
+.home-topbar-actions {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 720px) {
+  .home-logo {
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+  }
+
+  .home-topbar-actions {
+    top: 0.95rem;
+    right: 1rem;
+    gap: 0.55rem;
+  }
+}

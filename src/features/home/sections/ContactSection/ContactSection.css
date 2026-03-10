@@ -1,0 +1,107 @@
+.contact-crowd-section {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+.contact-crowd-canvas-host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.contact-crowd-canvas-host canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.contact-work-title {
+  position: absolute;
+  top: 1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: clamp(2rem, 5.8vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.42);
+}
+
+.contact-links {
+  position: absolute;
+  left: 50%;
+  top: 11.8rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: 7rem;
+  align-items: center;
+  justify-content: center;
+  width: min(96vw, 980px);
+  pointer-events: auto;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.82rem;
+  min-width: 250px;
+  padding: 1.08rem 1.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(7, 14, 26, 0);
+  color: #000000;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-link:hover {
+  transform: translateY(-2px);
+  border-color: rgba(193, 193, 193, 0.7);
+  background: rgba(198, 199, 199, 0.545);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.34);
+}
+
+.contact-link span {
+  font-size: 1.26rem;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .contact-crowd-section {
+    min-height: 100svh;
+  }
+
+  .contact-links {
+    top: 5.6rem;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    width: min(95vw, 560px);
+  }
+
+  .contact-work-title {
+    top: 0.5rem;
+    font-size: clamp(1.7rem, 9vw, 2.4rem);
+  }
+
+  .contact-link {
+    min-width: 205px;
+    padding: 0.9rem 1.05rem;
+  }
+
+  .contact-link span {
+    font-size: 1.06rem;
+  }
+}

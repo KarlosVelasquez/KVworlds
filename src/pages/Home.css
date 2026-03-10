@@ -1,22 +1,165 @@
-/* ===== GhostCursor always on top ===== */
 canvas[data-ghost-cursor] {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 2147483647 !important; /* máximo valor seguro */
+  z-index: 8 !important;
   pointer-events: none !important;
   mix-blend-mode: normal !important;
 }
-/* ===== Wrapper ===== */
 
+.home-shell {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  isolation: isolate;
+  background: linear-gradient(
+    to bottom,
+    #000000 0%,
+    #050505 16%,
+    #0d0d0d 30%,
+    #1f1f1f 46%,
+    #3a3a3a 62%,
+    #666666 76%,
+    #d0d0d0 88%,
+    #f5f5f5 96%,
+    #ffffff 100%
+  );
+}
 
-/* ============================
-   SPLASH / INTRO SCREEN
-   ============================ */
+.home-windows-stack {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0;
+  padding: 0;
+}
+
+.home-floating-background {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.72;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.skill-moon {
+  position: absolute;
+  border-radius: 46% 54% 43% 57% / 55% 42% 58% 45%;
+  border: 1px solid rgba(156, 163, 175, 0.28);
+  background: radial-gradient(circle at 22% 24%, rgba(255, 255, 255, 0.06), rgba(40, 44, 52, 0.42) 44%, rgba(10, 10, 14, 0.9));
+  box-shadow:
+    inset -10px -10px 15px rgba(0, 0, 0, 0.52),
+    inset 6px 6px 10px rgba(255, 255, 255, 0.02),
+    0 0 6px rgba(94, 104, 120, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+  transition: transform 0.2s ease;
+}
+
+.skill-moon-core {
+  position: relative;
+  width: 88%;
+  height: 88%;
+  border-radius: 40% 60% 44% 56% / 54% 44% 56% 46%;
+  background: rgba(8, 8, 12, 0.18);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skill-icon {
+  position: relative;
+  z-index: 2;
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
+}
+
+.skill-fallback {
+  position: absolute;
+  z-index: 1;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #d3d9e7;
+}
+
+.skill-moon.meteor-a {
+  border-radius: 46% 54% 43% 57% / 55% 42% 58% 45%;
+  transform: rotate(-9deg);
+}
+
+.skill-moon.meteor-b {
+  border-radius: 58% 42% 52% 48% / 44% 57% 43% 56%;
+  transform: rotate(6deg);
+}
+
+.skill-moon.meteor-c {
+  border-radius: 41% 59% 47% 53% / 52% 39% 61% 48%;
+  transform: rotate(13deg);
+}
+
+.home-window {
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.home-window.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.home-window--hero {
+  min-height: 92vh;
+}
+
+.home-window--about {
+  min-height: 92vh;
+}
+
+.home-window--projects,
+.home-window--contact {
+  min-height: 100vh;
+}
+
+@media (max-width: 720px) {
+  .home-windows-stack {
+    padding: 0;
+  }
+
+  .home-window--hero {
+    min-height: 88vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-window {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .splash-screen {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: #000000;
+  background: #000;
   transition: opacity 1s ease, transform 1s ease;
 }
 
@@ -31,7 +174,14 @@ canvas[data-ghost-cursor] {
   height: 100vh;
 }
 
-/* Mini loader (while Spline downloads) */
+.splash-spline-placeholder {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(900px 450px at 50% 20%, rgba(149, 157, 255, 0.18), transparent 70%),
+    linear-gradient(180deg, #06070d, #0a0a0f);
+}
+
 .splash-loader {
   position: absolute;
   inset: 0;
@@ -53,12 +203,6 @@ canvas[data-ghost-cursor] {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .loader-text {
   font-family: system-ui, sans-serif;
   font-size: 0.9rem;
@@ -67,8 +211,13 @@ canvas[data-ghost-cursor] {
   animation: pulse 1.8s ease-in-out infinite;
 }
 
-@keyframes pulse {
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
+@keyframes pulse {
   0%,
   100% {
     opacity: 0.4;
@@ -76,41 +225,5 @@ canvas[data-ghost-cursor] {
 
   50% {
     opacity: 1;
-  }
-}
-
-/* ============================
-   MAIN CONTENT (after splash)
-   ============================ */
-
-.main-content {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-  animation: fadeInContent 1.2s ease forwards;
-  z-index: 10;
-}
-
-/* Spline 3D background layer */
-.main-spline-bg {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1;
-}
-
-@keyframes fadeInContent {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
